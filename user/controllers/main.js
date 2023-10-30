@@ -1,23 +1,23 @@
-let shop = document.getElementById("shop");
+let shop = document.getElementById("shop")
 
-let basket = JSON.parse(localStorage.getItem("data")) || [];
+let basket = JSON.parse(localStorage.getItem("data")) || []
 
 // Fetch data from the API
-fetch("https://6539c7c2e3b530c8d9e8aa55.mockapi.io/Produt")
-  .then(response => response.json())
-  .then(data => {
-    const shopItemsData = data;
-    generateShop(shopItemsData);
+fetch("https://65218262a4199548356d4f0a.mockapi.io/Products")
+  .then((response) => response.json())
+  .then((data) => {
+    const shopItemsData = data
+    generateShop(shopItemsData)
   })
-  .catch(error => {
-    console.error("Error fetching data:", error);
-  });
+  .catch((error) => {
+    console.error("Error fetching data:", error)
+  })
 
 let generateShop = (data) => {
   shop.innerHTML = data
     .map((x) => {
-      let { id ,name ,price, img ,desc ,type} = x;
-      let search = basket.find((y) => y.id === id) || [];
+      let { id, name, price, img, desc, type } = x
+      let search = basket.find((y) => y.id === id) || []
       return `
     <div id="product-id-${id}" class="item">
       <img width="220" src=${img} alt="">
@@ -37,56 +37,54 @@ let generateShop = (data) => {
         </div>
       </div>
   </div>
-    `;
+    `
     })
-    .join("");
-};
-
+    .join("")
+}
 
 let increment = (id) => {
-  let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem);
+  let selectedItem = id
+  let search = basket.find((x) => x.id === selectedItem)
 
   if (search === undefined) {
     basket.push({
       id: selectedItem,
       item: 1,
-    });
+    })
   } else {
-    search.item += 1;
+    search.item += 1
   }
 
-  console.log(basket);
-  update(selectedItem);
-  localStorage.setItem("data", JSON.stringify(basket));
-};
+  console.log(basket)
+  update(selectedItem)
+  localStorage.setItem("data", JSON.stringify(basket))
+}
 
 let decrement = (id) => {
-  let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem);
+  let selectedItem = id
+  let search = basket.find((x) => x.id === selectedItem)
 
-  if (search === undefined) return;
-  else if (search.item === 0) return;
+  if (search === undefined) return
+  else if (search.item === 0) return
   else {
-    search.item -= 1;
+    search.item -= 1
   }
 
-  update(selectedItem);
-  basket = basket.filter((x) => x.item !== 0);
-  console.log(basket);
-  localStorage.setItem("data", JSON.stringify(basket));
-};
+  update(selectedItem)
+  basket = basket.filter((x) => x.item !== 0)
+  console.log(basket)
+  localStorage.setItem("data", JSON.stringify(basket))
+}
 
 let update = (id) => {
-  let search = basket.find((x) => x.id === id);
-  document.getElementById(id).innerHTML = search.item;
-  calculation();
-};
+  let search = basket.find((x) => x.id === id)
+  document.getElementById(id).innerHTML = search.item
+  calculation()
+}
 
 let calculation = () => {
-  let cartIcon = document.getElementById("cartAmount");
-  cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
-};
+  let cartIcon = document.getElementById("cartAmount")
+  cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0)
+}
 
-
-calculation();
+calculation()
