@@ -2,6 +2,8 @@ import { Product } from "../models/Products.js"
 
 getProducts()
 
+let isSubmitted = false
+
 var current_quantity_product
 
 function getProducts() {
@@ -14,10 +16,30 @@ function getProducts() {
     })
 }
 
-function isRequired(value) {
-  return !!value.trim()
+function samsungFilter() {
+  var filter_array = []
+
+  apiGetProductsList()
+    .then((response) => {
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i].type.toLowerCase() == "samsung") {
+          filter_array.push(response.data[i])
+        }
+      }
+      console.log(filter_array)
+      display(filter_array)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 }
 
+function isRequired(value) {
+  if (!value.trim()) {
+    return false
+  }
+  return true
+}
 //Check Validate
 function validate(order, productID) {
   // Lấy dữ liệu
@@ -48,7 +70,7 @@ function validate(order, productID) {
     document.getElementById("tbPrice").innerHTML =
       "Giá sản phẩm không được để trống"
     document.getElementById("tbPrice").style.display = "block"
-  } else if (isNaN(price)) {
+  } else if (isNaN(price) == true) {
     isValid = false
     document.getElementById("tbPrice").innerHTML = "Giá sản phẩm phải là số"
     document.getElementById("tbPrice").style.display = "block"
@@ -180,7 +202,7 @@ function createProduct() {
 
   // Gọi API thêm sản phẩm
   apiCreateProduct(product)
-    .then(() => {
+    .then((response) => {
       return apiGetProductsList()
     })
     .then((response) => {
